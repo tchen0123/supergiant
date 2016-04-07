@@ -40,7 +40,7 @@
 
 * use AWS meta endpoint to get required info
 
-* show resource common on all API responses
+* show resource types on all API responses
 
 * standardized errors, removing panics where possible
 
@@ -60,7 +60,7 @@
 
 ## v0.8.x
 
-* cluster info API: node IPs, instance common, etc.  (eventually billing stuff)
+* cluster info API: node IPs, instance types, etc.  (eventually billing stuff)
 
 ## v0.9.x
 
