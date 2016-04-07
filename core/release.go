@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/supergiant/guber"
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 type ReleaseCollection struct {
@@ -17,7 +17,7 @@ type ReleaseCollection struct {
 
 type ReleaseResource struct {
 	collection *ReleaseCollection
-	*types.Release
+	*common.Release
 
 	// TODO these are shared between releases, it's kinda funky right now
 	ExternalService *guber.Service `json:"-"`
@@ -32,7 +32,7 @@ type ReleaseList struct {
 }
 
 // EtcdKey implements the Collection interface.
-func (c *ReleaseCollection) EtcdKey(timestamp types.ID) string {
+func (c *ReleaseCollection) EtcdKey(timestamp common.ID) string {
 	key := path.Join("/releases", *c.Component.App().Name, *c.Component.Name)
 	if timestamp != nil {
 		key = path.Join(key, *timestamp)
@@ -85,8 +85,8 @@ func (c *ReleaseCollection) List() (*ReleaseList, error) {
 // New initializes an Release with a pointer to the Collection.
 func (c *ReleaseCollection) New() *ReleaseResource {
 	return &ReleaseResource{
-		Release: &types.Release{
-			Meta: types.NewMeta(),
+		Release: &common.Release{
+			Meta: common.NewMeta(),
 		},
 	}
 }
@@ -101,7 +101,7 @@ func (c *ReleaseCollection) Create(r *ReleaseResource) (*ReleaseResource, error)
 }
 
 // Get takes an id and returns an ReleaseResource if it exists.
-func (c *ReleaseCollection) Get(id types.ID) (*ReleaseResource, error) {
+func (c *ReleaseCollection) Get(id common.ID) (*ReleaseResource, error) {
 	r := c.New()
 	if err := c.core.DB.Get(c, id, r); err != nil {
 		return nil, err
@@ -148,7 +148,7 @@ func (r *ReleaseResource) Delete() error {
 	return r.collection.core.DB.Delete(r.collection, r.Timestamp)
 }
 
-func newReleaseTimestamp() types.ID {
+func newReleaseTimestamp() common.ID {
 	stamp := time.Now().Format("20060102150405")
 	return &stamp
 }
@@ -215,7 +215,7 @@ func (r *ReleaseResource) getEntrypoints() (map[string]*EntrypointResource, erro
 	return entrypoints, nil
 }
 
-func (r *ReleaseResource) containerPorts(public bool) (ports []*types.Port) {
+func (r *ReleaseResource) containerPorts(public bool) (ports []*common.Port) {
 	for _, container := range r.Containers {
 		for _, port := range container.Ports {
 			if port.Public == public {

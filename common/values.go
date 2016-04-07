@@ -1,4 +1,4 @@
-package types
+package common
 
 import (
 	"fmt"
@@ -31,7 +31,7 @@ func NewTimestamp() *Timestamp {
 
 // CPU / RAM resource values
 
-// TODO these could probably just be uint types instead of Structs.
+// TODO these could probably just be uint common instead of Structs.
 
 type BytesValue struct {
 	bytes uint

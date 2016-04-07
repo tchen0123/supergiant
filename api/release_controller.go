@@ -5,7 +5,7 @@ import (
 
 	"github.com/supergiant/supergiant/api/task"
 	"github.com/supergiant/supergiant/core"
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 type ReleaseController struct {
@@ -33,7 +33,7 @@ func (c *ReleaseController) Create(w http.ResponseWriter, r *http.Request) {
 		AppName:       release.App().Name,
 		ComponentName: release.Component().Name,
 	}
-	task, err := c.core.Tasks().Start(types.TaskTypeDeployComponent, msg)
+	task, err := c.core.Tasks().Start(common.TaskTypeDeployComponent, msg)
 	if err != nil {
 		renderError(w, err, http.StatusInternalServerError)
 		return

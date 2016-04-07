@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/supergiant/supergiant/api/task"
+	"github.com/supergiant/supergiant/common"
 	"github.com/supergiant/supergiant/core"
-	"github.com/supergiant/supergiant/types"
 )
 
 type AppController struct {
@@ -66,7 +66,7 @@ func (c *AppController) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	msg := &task.DeleteAppMessage{AppName: app.Name}
-	_, err = c.core.Tasks().Start(types.TaskTypeDeleteApp, msg)
+	_, err = c.core.Tasks().Start(common.TaskTypeDeleteApp, msg)
 	if err != nil {
 		renderError(w, err, http.StatusInternalServerError)
 		return

@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 
 	etcd "github.com/coreos/etcd/client"
 	"golang.org/x/net/context"
@@ -146,7 +146,7 @@ func (db *DB) List(r Collection, out interface{}) error {
 	return decodeList(r, resp, out)
 }
 
-func (db *DB) Create(r Collection, id types.ID, m Resource) error {
+func (db *DB) Create(r Collection, id common.ID, m Resource) error {
 	key := r.EtcdKey(id)
 
 	setCreatedTimestamp(m)
@@ -165,7 +165,7 @@ func (db *DB) Create(r Collection, id types.ID, m Resource) error {
 	return r.InitializeResource(m)
 }
 
-func (db *DB) Get(r Collection, id types.ID, out Resource) error {
+func (db *DB) Get(r Collection, id common.ID, out Resource) error {
 	key := r.EtcdKey(id)
 	resp, err := db.get(key)
 	if err != nil {
@@ -174,7 +174,7 @@ func (db *DB) Get(r Collection, id types.ID, out Resource) error {
 	return unmarshalNodeInto(r, resp.Node, out)
 }
 
-func (db *DB) Update(r Collection, id types.ID, m Resource) error {
+func (db *DB) Update(r Collection, id common.ID, m Resource) error {
 	key := r.EtcdKey(id)
 
 	setUpdatedTimestamp(m)
@@ -191,7 +191,7 @@ func (db *DB) Update(r Collection, id types.ID, m Resource) error {
 	return r.InitializeResource(m)
 }
 
-func (db *DB) Delete(r Collection, id types.ID) error {
+func (db *DB) Delete(r Collection, id common.ID) error {
 	key := r.EtcdKey(id)
 	_, err := db.delete(key)
 	return err
@@ -228,7 +228,7 @@ func (db *DB) CreateInOrder(r Collection, m OrderedResource) error {
 
 //------------------------------------------------------------------------------
 
-func (db *DB) CompareAndSwap(r Collection, id types.ID, old Resource, new Resource) error {
+func (db *DB) CompareAndSwap(r Collection, id common.ID, old Resource, new Resource) error {
 	key := r.EtcdKey(id)
 
 	oldVal, err := marshalResource(old)
@@ -266,7 +266,7 @@ func unmarshalNodeInto(r Collection, node *etcd.Node, m Resource) error {
 // /home/dir/filename.txt
 //
 // and decided that "filename.txt" was the "base name".
-func lastKeySegment(key string) types.ID {
+func lastKeySegment(key string) common.ID {
 	strs := strings.Split(key, "/")
 	segment := strs[len(strs)-1]
 	return &segment

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 // Collection is an interface for defining behavior of a collection of
 // Resources.
 type Collection interface {
-	EtcdKey(id types.ID) string
+	EtcdKey(id common.ID) string
 
 	// InitializeResource is called when unmarshalling objects from etcd.
 	// Primarily, it sets a pointer to the Collection on the Resource.
@@ -18,7 +18,7 @@ type Collection interface {
 }
 
 // Resource is an interface used mainly for generalized marshalling purposes for
-// resource types.
+// resource common.
 type Resource interface {
 	// PersistableObject returns the portion (or whole) of the Resource meant to
 	// be marshalled and stored in the DB. This allows for dynamic "virtual"
@@ -30,7 +30,7 @@ type Resource interface {
 // set an auto-generated ID from etcd on the Resource.
 type OrderedResource interface {
 	PersistableObject() interface{}
-	SetID(id types.ID)
+	SetID(id common.ID)
 }
 
 // TODO should maybe move this to util or helper file
@@ -81,7 +81,7 @@ func getItemsPtrAndItemType(r interface{}) (reflect.Value, reflect.Type) {
 
 // // used to initialize Meta object primarily
 // func initResource(r Resource) {
-// 	meta := reflect.ValueOf(types.NewMeta()).Elem()
+// 	meta := reflect.ValueOf(common.NewMeta()).Elem()
 // 	getFieldValue(r.PersistableObject(), "Meta").Set(meta)
 // }
 
@@ -94,7 +94,7 @@ func getFieldValue(r Resource, f string) reflect.Value {
 }
 
 func newTimestampValue() reflect.Value {
-	return reflect.ValueOf(types.NewTimestamp()) //.Elem()
+	return reflect.ValueOf(common.NewTimestamp()) //.Elem()
 }
 
 func setCreatedTimestamp(r Resource) {

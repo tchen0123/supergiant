@@ -3,10 +3,10 @@ package client
 import (
 	"path"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
-type Release types.Release
+type Release common.Release
 
 type ReleaseCollection struct {
 	client *Client
@@ -58,7 +58,7 @@ func (c *ReleaseCollection) Create(m *Release) (*ReleaseResource, error) {
 	return r, nil
 }
 
-func (c *ReleaseCollection) Get(timestamp types.ID) (*ReleaseResource, error) {
+func (c *ReleaseCollection) Get(timestamp common.ID) (*ReleaseResource, error) {
 	m := &Release{
 		Timestamp: timestamp,
 	}

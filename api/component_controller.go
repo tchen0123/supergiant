@@ -5,7 +5,7 @@ import (
 
 	"github.com/supergiant/supergiant/api/task"
 	"github.com/supergiant/supergiant/core"
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 type ComponentController struct {
@@ -78,7 +78,7 @@ func (c *ComponentController) Delete(w http.ResponseWriter, r *http.Request) {
 		AppName:       component.App().Name,
 		ComponentName: component.Name,
 	}
-	_, err = c.core.Tasks().Start(types.TaskTypeDeleteComponent, msg)
+	_, err = c.core.Tasks().Start(common.TaskTypeDeleteComponent, msg)
 	if err != nil {
 		renderError(w, err, http.StatusInternalServerError)
 		return

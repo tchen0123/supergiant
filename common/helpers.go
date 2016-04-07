@@ -1,11 +1,11 @@
-package client
+package common
 
 import (
 	"fmt"
 	"time"
 )
 
-func waitFor(desc string, d time.Duration, i time.Duration, fn func() (bool, error)) error {
+func WaitFor(desc string, d time.Duration, i time.Duration, fn func() (bool, error)) error {
 	started := time.Now()
 	for {
 		elapsed := time.Since(started)

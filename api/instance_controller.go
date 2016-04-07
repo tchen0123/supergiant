@@ -5,7 +5,7 @@ import (
 
 	"github.com/supergiant/supergiant/api/task"
 	"github.com/supergiant/supergiant/core"
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 type InstanceController struct {
@@ -52,7 +52,7 @@ func (c *InstanceController) Start(w http.ResponseWriter, r *http.Request) {
 		ReleaseTimestamp: instance.Release().Timestamp,
 		ID:               instance.ID,
 	}
-	_, err = c.core.Tasks().Start(types.TaskTypeStartInstance, msg)
+	_, err = c.core.Tasks().Start(common.TaskTypeStartInstance, msg)
 	if err != nil {
 		renderError(w, err, http.StatusInternalServerError)
 		return
@@ -77,7 +77,7 @@ func (c *InstanceController) Stop(w http.ResponseWriter, r *http.Request) {
 		ReleaseTimestamp: instance.Release().Timestamp,
 		ID:               instance.ID,
 	}
-	_, err = c.core.Tasks().Start(types.TaskTypeStopInstance, msg)
+	_, err = c.core.Tasks().Start(common.TaskTypeStopInstance, msg)
 	if err != nil {
 		renderError(w, err, http.StatusInternalServerError)
 		return

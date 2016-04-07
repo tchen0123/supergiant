@@ -3,7 +3,7 @@ package core
 import (
 	"path"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 type ImageRepoCollection struct {
@@ -12,17 +12,17 @@ type ImageRepoCollection struct {
 
 type ImageRepoResource struct {
 	collection *ImageRepoCollection
-	*types.ImageRepo
+	*common.ImageRepo
 }
 
-// NOTE this does not inherit from types like model does; all we need is a List
+// NOTE this does not inherit from common like model does; all we need is a List
 // object, internally, that has a slice of our composed model above.
 type ImageRepoList struct {
 	Items []*ImageRepoResource `json:"items"`
 }
 
 // EtcdKey implements the Collection interface.
-func (c *ImageRepoCollection) EtcdKey(name types.ID) string {
+func (c *ImageRepoCollection) EtcdKey(name common.ID) string {
 	key := "/image_repos/dockerhub"
 	if name != nil {
 		key = path.Join(key, *name)
@@ -47,8 +47,8 @@ func (c *ImageRepoCollection) List() (*ImageRepoList, error) {
 // New initializes an ImageRepo with a pointer to the Collection.
 func (c *ImageRepoCollection) New() *ImageRepoResource {
 	return &ImageRepoResource{
-		ImageRepo: &types.ImageRepo{
-			Meta: types.NewMeta(),
+		ImageRepo: &common.ImageRepo{
+			Meta: common.NewMeta(),
 		},
 	}
 }
@@ -63,7 +63,7 @@ func (c *ImageRepoCollection) Create(r *ImageRepoResource) (*ImageRepoResource, 
 }
 
 // Get takes a name and returns an ImageRepoResource if it exists.
-func (c *ImageRepoCollection) Get(name types.ID) (*ImageRepoResource, error) {
+func (c *ImageRepoCollection) Get(name common.ID) (*ImageRepoResource, error) {
 	r := c.New()
 	if err := c.core.DB.Get(c, name, r); err != nil {
 		return nil, err

@@ -1,4 +1,4 @@
-package types
+package common
 
 // Tags is a meta field for holding unstructued key/val info.
 type Tags map[string]string
@@ -55,10 +55,10 @@ type ComponentAddresses struct {
 	Internal []*PortAddress `json:"internal"`
 }
 
-// TODO implement...
 type CustomDeployScript struct {
-	Image   string `json:"image"`
-	Command string `json:"command"`
+	Image   string   `json:"image"`
+	Command []string `json:"command"`
+	Timeout int      `json:"timeout"`
 }
 
 // Volume

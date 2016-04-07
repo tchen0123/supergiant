@@ -5,35 +5,35 @@ import (
 	"strings"
 
 	"github.com/supergiant/guber"
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 // kube_helpers.go is a collection of helper methods that convert a Supergiant
 // resource definition into a Kubernetes resource defition.
 // (and some other assorted things that should maybe be moved out...)
 
-func kubeVolumeMounts(m *types.ContainerBlueprint) (volMounts []*guber.VolumeMount) {
+func kubeVolumeMounts(m *common.ContainerBlueprint) (volMounts []*guber.VolumeMount) {
 	for _, mount := range m.Mounts {
 		volMounts = append(volMounts, asKubeVolumeMount(mount))
 	}
 	return volMounts
 }
 
-func kubeContainerPorts(m *types.ContainerBlueprint) (cPorts []*guber.ContainerPort) {
+func kubeContainerPorts(m *common.ContainerBlueprint) (cPorts []*guber.ContainerPort) {
 	for _, port := range m.Ports {
 		cPorts = append(cPorts, asKubeContainerPort(port))
 	}
 	return cPorts
 }
 
-func interpolatedEnvVars(m *types.ContainerBlueprint, instance *InstanceResource) (envVars []*guber.EnvVar) {
+func interpolatedEnvVars(m *common.ContainerBlueprint, instance *InstanceResource) (envVars []*guber.EnvVar) {
 	for _, envVar := range m.Env {
 		envVars = append(envVars, asKubeEnvVar(envVar, instance))
 	}
 	return envVars
 }
 
-func ImageRepoName(m *types.ContainerBlueprint) string {
+func ImageRepoName(m *common.ContainerBlueprint) string {
 	return strings.Split(m.Image, "/")[0]
 }
 
@@ -74,14 +74,14 @@ func asKubeContainer(m *types.ContainerBlueprint, instance *InstanceResource) *g
 
 // EnvVar
 //==============================================================================
-func interpolatedValue(m *types.EnvVar, instance *InstanceResource) string {
+func interpolatedValue(m *common.EnvVar, instance *InstanceResource) string {
 	r := strings.NewReplacer(
 		"{{ instance_id }}", *instance.ID,
 		"{{ other_stuff }}", "TODO")
 	return r.Replace(m.Value)
 }
 
-func asKubeEnvVar(m *types.EnvVar, instance *InstanceResource) *guber.EnvVar {
+func asKubeEnvVar(m *common.EnvVar, instance *InstanceResource) *guber.EnvVar {
 	return &guber.EnvVar{
 		Name:  m.Name,
 		Value: interpolatedValue(m, instance),
@@ -107,7 +107,7 @@ func asKubeVolume(m *AwsVolume) (*guber.Volume, error) {
 
 // Mount
 //==============================================================================
-func asKubeVolumeMount(m *types.Mount) *guber.VolumeMount {
+func asKubeVolumeMount(m *common.Mount) *guber.VolumeMount {
 	return &guber.VolumeMount{
 		Name:      *m.Volume,
 		MountPath: m.Path,
@@ -116,17 +116,17 @@ func asKubeVolumeMount(m *types.Mount) *guber.VolumeMount {
 
 // Port
 //==============================================================================
-func portName(m *types.Port) string {
+func portName(m *common.Port) string {
 	return strconv.Itoa(m.Number)
 }
 
-func asKubeContainerPort(m *types.Port) *guber.ContainerPort {
+func asKubeContainerPort(m *common.Port) *guber.ContainerPort {
 	return &guber.ContainerPort{
 		ContainerPort: m.Number,
 	}
 }
 
-func asKubeServicePort(m *types.Port) *guber.ServicePort {
+func asKubeServicePort(m *common.Port) *guber.ServicePort {
 	return &guber.ServicePort{
 		Name:     portName(m),
 		Port:     m.Number,

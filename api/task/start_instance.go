@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 
 	"github.com/supergiant/supergiant/core"
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 type StartInstanceMessage struct {
-	AppName          types.ID
-	ComponentName    types.ID
-	ReleaseTimestamp types.ID
-	ID               types.ID
+	AppName          common.ID
+	ComponentName    common.ID
+	ReleaseTimestamp common.ID
+	ID               common.ID
 }
 
 // StartInstance implements Performable interface

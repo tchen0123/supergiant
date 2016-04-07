@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/supergiant/supergiant/common"
 	"github.com/supergiant/supergiant/core"
-	"github.com/supergiant/supergiant/types"
 )
 
 const (
@@ -92,15 +92,15 @@ func (s *Supervisor) Run() {
 
 		var performer Performable
 		switch task.Type {
-		case types.TaskTypeDeleteApp:
+		case common.TaskTypeDeleteApp:
 			performer = DeleteApp{s.c}
-		case types.TaskTypeDeleteComponent:
+		case common.TaskTypeDeleteComponent:
 			performer = DeleteComponent{s.c}
-		case types.TaskTypeDeployComponent:
+		case common.TaskTypeDeployComponent:
 			performer = DeployComponent{s.c}
-		case types.TaskTypeStartInstance:
+		case common.TaskTypeStartInstance:
 			performer = StartInstance{s.c}
-		case types.TaskTypeStopInstance:
+		case common.TaskTypeStopInstance:
 			performer = StopInstance{s.c}
 		default:
 			panic("Could not find task type")

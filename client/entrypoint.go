@@ -3,10 +3,10 @@ package client
 import (
 	"path"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
-type Entrypoint types.Entrypoint
+type Entrypoint common.Entrypoint
 
 type EntrypointCollection struct {
 	client *Client
@@ -55,7 +55,7 @@ func (c *EntrypointCollection) Create(m *Entrypoint) (*EntrypointResource, error
 	return r, nil
 }
 
-func (c *EntrypointCollection) Get(domain types.ID) (*EntrypointResource, error) {
+func (c *EntrypointCollection) Get(domain common.ID) (*EntrypointResource, error) {
 	m := &Entrypoint{
 		Domain: domain,
 	}

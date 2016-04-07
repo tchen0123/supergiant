@@ -3,10 +3,10 @@ package client
 import (
 	"path"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
-type Component types.Component
+type Component common.Component
 
 type ComponentCollection struct {
 	client *Client
@@ -57,9 +57,9 @@ func (c *ComponentCollection) Create(m *Component) (*ComponentResource, error) {
 	return r, nil
 }
 
-func (c *ComponentCollection) Get(name types.ID) (*ComponentResource, error) {
+func (c *ComponentCollection) Get(name common.ID) (*ComponentResource, error) {
 	m := &Component{
-		PersistableComponent: &types.PersistableComponent{ // TODO any way to not make this so weird?
+		PersistableComponent: &common.PersistableComponent{ // TODO any way to not make this so weird?
 			Name: name,
 		},
 	}

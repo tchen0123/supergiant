@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/supergiant/supergiant/common"
 	"github.com/supergiant/supergiant/core"
 	"github.com/supergiant/supergiant/deploy"
-	"github.com/supergiant/supergiant/types"
 )
 
 type DeployComponentMessage struct {
-	AppName       types.ID
-	ComponentName types.ID
+	AppName       common.ID
+	ComponentName common.ID
 }
 
 type DeployComponent struct {
@@ -56,9 +56,15 @@ func (j DeployComponent) Perform(data []byte) error {
 		targetRelease.AddNewPorts(currentRelease)
 	}
 
-	// This goes to the deploy/ folder which uses the client package.
-	if err := deploy.Deploy(app.Name, component.Name); err != nil {
-		return err
+	if customDeploy := component.CustomDeployScript; customDeploy != nil {
+		if err := core.RunCustomDeployment(j.core, component); err != nil {
+			return err
+		}
+	} else {
+		// This goes to the deploy/ folder which uses the client package.
+		if err := deploy.Deploy(app.Name, component.Name); err != nil {
+			return err
+		}
 	}
 
 	// Make sure old release (current) has been fully stopped, and the new release

@@ -3,7 +3,7 @@ package core
 import (
 	"path"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
 type ComponentCollection struct {
@@ -13,7 +13,7 @@ type ComponentCollection struct {
 
 type ComponentResource struct {
 	collection *ComponentCollection
-	*types.Component
+	*common.Component
 }
 
 type ComponentList struct {
@@ -21,7 +21,7 @@ type ComponentList struct {
 }
 
 // EtcdKey implements the Collection interface.
-func (c *ComponentCollection) EtcdKey(name types.ID) string {
+func (c *ComponentCollection) EtcdKey(name common.ID) string {
 	key := path.Join("/components", *c.App.Name)
 	if name != nil {
 		key = path.Join(key, *name)
@@ -53,9 +53,9 @@ func (c *ComponentCollection) List() (*ComponentList, error) {
 func (c *ComponentCollection) New() *ComponentResource {
 	// Yes, this looks insane.
 	return &ComponentResource{
-		Component: &types.Component{
-			PersistableComponent: &types.PersistableComponent{
-				Meta: types.NewMeta(),
+		Component: &common.Component{
+			PersistableComponent: &common.PersistableComponent{
+				Meta: common.NewMeta(),
 			},
 		},
 	}
@@ -70,7 +70,7 @@ func (c *ComponentCollection) Create(r *ComponentResource) (*ComponentResource, 
 }
 
 // Get takes a name and returns an ComponentResource if it exists.
-func (c *ComponentCollection) Get(name types.ID) (*ComponentResource, error) {
+func (c *ComponentCollection) Get(name common.ID) (*ComponentResource, error) {
 	r := c.New()
 	if err := c.core.DB.Get(c, name, r); err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (r *ComponentResource) decorate() error {
 		return err
 	}
 
-	r.Addresses = &types.ComponentAddresses{
+	r.Addresses = &common.ComponentAddresses{
 		External: externalAddrs,
 		Internal: internalAddrs,
 	}
@@ -161,7 +161,7 @@ func (r *ComponentResource) TargetRelease() (*ReleaseResource, error) {
 	return r.Releases().Get(r.TargetReleaseTimestamp)
 }
 
-func (r *ComponentResource) externalAddresses() (addrs []*types.PortAddress, err error) {
+func (r *ComponentResource) externalAddresses() (addrs []*common.PortAddress, err error) {
 	release, err := r.CurrentRelease()
 	if err != nil {
 		return nil, err
@@ -172,7 +172,7 @@ func (r *ComponentResource) externalAddresses() (addrs []*types.PortAddress, err
 	return addrs, nil
 }
 
-func (r *ComponentResource) internalAddresses() (addrs []*types.PortAddress, err error) {
+func (r *ComponentResource) internalAddresses() (addrs []*common.PortAddress, err error) {
 	release, err := r.CurrentRelease()
 	if err != nil {
 		return nil, err

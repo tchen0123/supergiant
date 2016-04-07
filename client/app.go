@@ -3,10 +3,10 @@ package client
 import (
 	"path"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
-type App types.App
+type App common.App
 
 type AppCollection struct {
 	client *Client
@@ -55,7 +55,7 @@ func (c *AppCollection) Create(m *App) (*AppResource, error) {
 	return r, nil
 }
 
-func (c *AppCollection) Get(name types.ID) (*AppResource, error) {
+func (c *AppCollection) Get(name common.ID) (*AppResource, error) {
 	m := &App{
 		Name: name,
 	}

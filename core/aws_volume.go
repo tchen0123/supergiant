@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -12,7 +12,7 @@ import (
 
 type AwsVolume struct {
 	core      *Core
-	Blueprint *types.VolumeBlueprint
+	Blueprint *common.VolumeBlueprint
 	Instance  *InstanceResource
 
 	awsVol *ec2.Volume // used internally to store record of AWS vol

@@ -5,7 +5,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/autoscaling"
@@ -18,17 +18,17 @@ type EntrypointCollection struct {
 
 type EntrypointResource struct {
 	collection *EntrypointCollection
-	*types.Entrypoint
+	*common.Entrypoint
 }
 
-// NOTE this does not inherit from types like model does; all we need is a List
+// NOTE this does not inherit from common like model does; all we need is a List
 // object, internally, that has a slice of our composed model above.
 type EntrypointList struct {
 	Items []*EntrypointResource `json:"items"`
 }
 
 // EtcdKey implements the Collection interface.
-func (c *EntrypointCollection) EtcdKey(domain types.ID) string {
+func (c *EntrypointCollection) EtcdKey(domain common.ID) string {
 	key := "/entrypoints"
 	if domain != nil {
 		key = path.Join(key, *domain)
@@ -53,8 +53,8 @@ func (c *EntrypointCollection) List() (*EntrypointList, error) {
 // New initializes an Entrypoint with a pointer to the Collection.
 func (c *EntrypointCollection) New() *EntrypointResource {
 	return &EntrypointResource{
-		Entrypoint: &types.Entrypoint{
-			Meta: types.NewMeta(),
+		Entrypoint: &common.Entrypoint{
+			Meta: common.NewMeta(),
 		},
 	}
 }
@@ -86,7 +86,7 @@ func (c *EntrypointCollection) Create(r *EntrypointResource) (*EntrypointResourc
 }
 
 // Get takes a name and returns an EntrypointResource if it exists.
-func (c *EntrypointCollection) Get(domain types.ID) (*EntrypointResource, error) {
+func (c *EntrypointCollection) Get(domain common.ID) (*EntrypointResource, error) {
 	r := c.New()
 	if err := c.core.DB.Get(c, domain, r); err != nil {
 		return nil, err

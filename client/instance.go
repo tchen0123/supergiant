@@ -5,10 +5,10 @@ import (
 	"path"
 	"time"
 
-	"github.com/supergiant/supergiant/types"
+	"github.com/supergiant/supergiant/common"
 )
 
-type Instance types.Instance
+type Instance common.Instance
 
 type InstanceCollection struct {
 	client *Client
@@ -72,7 +72,7 @@ func (c *InstanceCollection) List() (*InstanceList, error) {
 // 	return r, nil
 // }
 
-func (c *InstanceCollection) Get(id types.ID) (*InstanceResource, error) {
+func (c *InstanceCollection) Get(id common.ID) (*InstanceResource, error) {
 	m := &Instance{
 		ID: id,
 	}
@@ -107,7 +107,7 @@ func (r *InstanceResource) WaitForStarted() error {
 	// very long time for snapshots on large volumes (when resizing volumes).
 
 	desc := fmt.Sprintf("Instance start: %s", r.Name)
-	return waitFor(desc, 4*time.Hour, 5*time.Second, func() (bool, error) {
+	return common.WaitFor(desc, 4*time.Hour, 5*time.Second, func() (bool, error) {
 		if err := r.Reload(); err != nil {
 			return false, err
 		}
@@ -121,7 +121,7 @@ func (r *InstanceResource) WaitForStopped() error {
 	// dynamically based on the TerminationGracePeriod setting.
 
 	desc := fmt.Sprintf("Instance stop: %s", r.Name)
-	return waitFor(desc, 10*time.Minute, 3*time.Second, func() (bool, error) {
+	return common.WaitFor(desc, 10*time.Minute, 3*time.Second, func() (bool, error) {
 		if err := r.Reload(); err != nil {
 			return false, err
 		}
