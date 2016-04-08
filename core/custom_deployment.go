@@ -31,15 +31,31 @@ func RunCustomDeployment(core *Core, component *ComponentResource) error {
 		return err
 	}
 
-	common.WaitFor(name, time.Second*time.Duration(cd.Timeout), time.Second*5, func() (bool, error) {
+	var timeout time.Duration
+	if cd.Timeout == 0 {
+		timeout = 30 * time.Minute
+	} else {
+		timeout = time.Duration(cd.Timeout) * time.Second
+	}
+
+	var log string
+
+	common.WaitFor(name, timeout, time.Second*5, func() (bool, error) {
 		pod, err := core.K8S.Pods("default").Get(name)
 		if err != nil {
 			return false, err
 		} else if pod == nil {
 			return true, nil // done
 		}
+
+		if latestLog, err := core.K8S.Pods("default").Log(name); err != nil {
+			log = latestLog
+		}
+
 		return false, nil // pod still exists, keep going
 	})
+
+	fmt.Println(log)
 
 	// Now we need to check to see if there were reported errors about the pod
 	query := &guber.QueryParams{
@@ -53,7 +69,6 @@ func RunCustomDeployment(core *Core, component *ComponentResource) error {
 	for _, event := range events.Items {
 		fmt.Println("EVENT: ", fmt.Sprintf("%#v", event))
 	}
-	panic(events)
 
-	// return nil
+	return nil
 }

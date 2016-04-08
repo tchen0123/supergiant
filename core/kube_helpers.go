@@ -37,23 +37,23 @@ func ImageRepoName(m *common.ContainerBlueprint) string {
 	return strings.Split(m.Image, "/")[0]
 }
 
-func asKubeContainer(m *types.ContainerBlueprint, instance *InstanceResource) *guber.Container { // NOTE how instance must be passed here
+func asKubeContainer(m *common.ContainerBlueprint, instance *InstanceResource) *guber.Container { // NOTE how instance must be passed here
 	// TODO
 	resources := new(guber.Resources)
 	if m.RAM != nil {
 		if m.RAM.Min != 0 {
-			resources.Requests.Memory = types.BytesFromMiB(m.RAM.Min).ToKubeMebibytes()
+			resources.Requests.Memory = common.BytesFromMiB(m.RAM.Min).ToKubeMebibytes()
 		}
 		if m.RAM.Max != 0 {
-			resources.Limits.Memory = types.BytesFromMiB(m.RAM.Max).ToKubeMebibytes()
+			resources.Limits.Memory = common.BytesFromMiB(m.RAM.Max).ToKubeMebibytes()
 		}
 	}
 	if m.CPU != nil {
 		if m.CPU.Min != 0 {
-			resources.Requests.CPU = types.CoresFromMillicores(m.CPU.Min).ToKubeMillicores()
+			resources.Requests.CPU = common.CoresFromMillicores(m.CPU.Min).ToKubeMillicores()
 		}
 		if m.CPU.Max != 0 {
-			resources.Limits.CPU = types.CoresFromMillicores(m.CPU.Max).ToKubeMillicores()
+			resources.Limits.CPU = common.CoresFromMillicores(m.CPU.Max).ToKubeMillicores()
 		}
 	}
 
